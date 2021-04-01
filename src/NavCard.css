@@ -1,0 +1,7 @@
+.NavCard-link-active {
+  font-weight: bold;
+}
+
+.card-body a {
+  margin-right: 10px;
+}
