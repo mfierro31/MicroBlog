@@ -9,7 +9,6 @@ const PostForm = ({ edit }) => {
 
   let post;
   let postId;
-  let editing;
   let handleEditClick;
   let addPost;
   let editPost;
@@ -20,7 +19,6 @@ const PostForm = ({ edit }) => {
   if (edit) {
     post = editingContext.post;
     postId = editingContext.postId;
-    editing = editingContext.editing;
     handleEditClick = editingContext.handleEditClick;
     editPost = postContext.editBlogPost;
   } else {

@@ -7,32 +7,35 @@ import BlogContext from './contexts/blogContext';
 import { v4 as uuid } from 'uuid';
 
 const Routes = () => {
-  const [blogPosts, setBlogPosts] = useState(JSON.parse(window.localStorage.getItem('blogPosts')) || []);
+  const [blogPosts, setBlogPosts] = useState(JSON.parse(window.localStorage.getItem('blogPosts')) || {});
   const history = useHistory();
 
   const addBlogPost = post => {
-    const updatedPosts = [...blogPosts, { ...post, id: uuid(), comments: [] }];
+    const newPostId = uuid();
+    const newPost = { 
+      ...post, 
+      comments: {} 
+    };
+    const updatedPosts = { ...blogPosts, [newPostId]: newPost };
     setBlogPosts(updatedPosts);
     window.localStorage.setItem('blogPosts', JSON.stringify(updatedPosts));
   }
 
   const editBlogPost = (post, id) => {
-    const blogPostsCopy = [...blogPosts];
-    const blogPostIdx = blogPostsCopy.findIndex(p => p.id === id);
-    const blogPost = blogPostsCopy[blogPostIdx];
-
-    blogPost.title = post.title;
-    blogPost.description = post.description;
-    blogPost.body = post.body;
+    const blogPostsCopy = { ...blogPosts };
+    
+    blogPostsCopy[id].title = post.title;
+    blogPostsCopy[id].description = post.description;
+    blogPostsCopy[id].body = post.body;
 
     setBlogPosts(blogPostsCopy);
     window.localStorage.setItem('blogPosts', JSON.stringify(blogPostsCopy));
   }
 
   const deleteBlogPost = (postId) => {
-    const blogPostsCopy = [...blogPosts];
-    const blogPostIdx = blogPostsCopy.findIndex(p => p.id === postId);
-    blogPostsCopy.splice(blogPostIdx, 1);
+    const blogPostsCopy = { ...blogPosts };
+    
+    delete blogPostsCopy[postId];
 
     setBlogPosts(blogPostsCopy);
     window.localStorage.setItem('blogPosts', JSON.stringify(blogPostsCopy));
@@ -40,20 +43,21 @@ const Routes = () => {
   }
 
   const addComment = (postId, text) => {
-    const blogPostsCopy = [...blogPosts];
-    const blogPost = blogPostsCopy.find(p => p.id === postId);
-    blogPost.comments.push({ id: uuid(), text });
+    const blogPostsCopy = { ...blogPosts };
+    const blogPost = blogPostsCopy[postId];
+    const commentId = uuid();
+
+    blogPost.comments[commentId] = text;
 
     setBlogPosts(blogPostsCopy);
     window.localStorage.setItem('blogPosts', JSON.stringify(blogPostsCopy));
   }
 
   const deleteComment = (postId, commentId) => {
-    const blogPostsCopy = [...blogPosts];
-    const blogPost = blogPostsCopy.find(p => p.id === postId);
+    const blogPostsCopy = { ...blogPosts };
+    const blogPost = blogPostsCopy[postId];
 
-    const commentIdx = blogPost.comments.findIndex(c => c.id === commentId);
-    blogPost.comments.splice(commentIdx, 1);
+    delete blogPost.comments[commentId];
 
     setBlogPosts(blogPostsCopy);
     window.localStorage.setItem('blogPosts', JSON.stringify(blogPostsCopy));

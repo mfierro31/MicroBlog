@@ -8,9 +8,9 @@ const BlogList = () => {
   return (
     <div className="container">
       <div className="row justify-content-between">
-        {posts.map(p => (
-          <div key={p.id} className="col-6 mb-5">
-            <BlogCard key={p.id} id={p.id} title={p.title} description={p.description}/>
+        {Object.keys(posts).map(key => (
+          <div key={key} className="col-6 mb-5">
+            <BlogCard key={key} id={key} title={posts[key].title} description={posts[key].description}/>
           </div>
         ))}
       </div>

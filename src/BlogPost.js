@@ -9,11 +9,11 @@ import './BlogPost.css';
 
 const BlogPost = () => {
   const { postId } = useParams();
-  const { deletePost, blogPosts: posts } = useContext(BlogContext);
+  const { deleteBlogPost: deletePost, blogPosts: posts } = useContext(BlogContext);
 
   const [editing, setEditing] = useState(false);
 
-  const post = posts.find(p => p.id === postId);
+  const post = posts[postId];
 
   const handleEditClick = () => {
     setEditing(!editing);
@@ -23,7 +23,7 @@ const BlogPost = () => {
     return <Redirect to="/" />
   } else if (editing) {
     return (
-      <EditFormContext.Provider value={{ editing, handleEditClick, post, postId }}>
+      <EditFormContext.Provider value={{ handleEditClick, post, postId }}>
         <PostForm edit={true} />
       </EditFormContext.Provider>
     )
@@ -39,7 +39,9 @@ const BlogPost = () => {
         </div>
         <hr className="BlogPost-hr" />
         <h3 className="my-5">Comments</h3>
-        {post.comments.map(c => <Comment key={c.id} commentId={c.id} text={c.text} postId={postId} />)}
+        {Object.keys(post.comments).map(key => (
+          <Comment key={key} commentId={key} text={post.comments[key]} postId={postId} />
+        ))}
         <AddCommentForm postId={postId} />
       </div>
     )
