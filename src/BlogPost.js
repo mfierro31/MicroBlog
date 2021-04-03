@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { useParams, Redirect } from 'react-router-dom';
+import { useParams, Redirect, useHistory } from 'react-router-dom';
 import EditFormContext from './contexts/editFormContext';
 import BlogContext from './contexts/blogContext';
 import PostForm from './PostForm';
@@ -9,6 +9,8 @@ import './BlogPost.css';
 
 const BlogPost = () => {
   const { postId } = useParams();
+  const history = useHistory();
+
   const { deleteBlogPost: deletePost, blogPosts: posts } = useContext(BlogContext);
 
   const [editing, setEditing] = useState(false);
@@ -17,6 +19,11 @@ const BlogPost = () => {
 
   const handleEditClick = () => {
     setEditing(!editing);
+  }
+
+  const deleteBlogPost = () => {
+    deletePost(postId)
+    history.push("/");
   }
 
   if (post === undefined) {
@@ -35,7 +42,7 @@ const BlogPost = () => {
         <p>{post.body}</p>
         <div className="mt-3 mb-5">
           <button onClick={handleEditClick} className="btn btn-primary mr-3">Edit</button>
-          <button onClick={() => deletePost(postId)} className="btn btn-danger">Delete</button>
+          <button onClick={deleteBlogPost} className="btn btn-danger">Delete</button>
         </div>
         <hr className="BlogPost-hr" />
         <h3 className="my-5">Comments</h3>
