@@ -1,7 +1,7 @@
-import React, { useState, useContext } from 'react';
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useParams, Redirect, useHistory } from 'react-router-dom';
-import EditFormContext from './contexts/editFormContext';
-import BlogContext from './contexts/blogContext';
+import { toggleEdit, deletePost } from './actions';
 import PostForm from './PostForm';
 import Comment from './Comment';
 import AddCommentForm from './AddCommentForm';
@@ -10,19 +10,16 @@ import './BlogPost.css';
 const BlogPost = () => {
   const { postId } = useParams();
   const history = useHistory();
+  const dispatch = useDispatch();
 
-  const { deleteBlogPost: deletePost, blogPosts: posts } = useContext(BlogContext);
-
-  const [editing, setEditing] = useState(false);
+  const posts = useSelector(store => store.blogPosts);
+  const editing = useSelector(store => store.editing);
 
   const post = posts[postId];
 
-  const handleEditClick = () => {
-    setEditing(!editing);
-  }
-
+  const handleEditClick = () => dispatch(toggleEdit());
   const deleteBlogPost = () => {
-    deletePost(postId)
+    dispatch(deletePost(postId));
     history.push("/");
   }
 
@@ -30,9 +27,7 @@ const BlogPost = () => {
     return <Redirect to="/" />
   } else if (editing) {
     return (
-      <EditFormContext.Provider value={{ handleEditClick, post, postId }}>
-        <PostForm edit={true} />
-      </EditFormContext.Provider>
+      <PostForm post={post} postId={postId} />
     )
   } else {
     return (

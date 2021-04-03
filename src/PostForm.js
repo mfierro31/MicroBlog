@@ -1,29 +1,13 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
-import EditFormContext from './contexts/editFormContext';
-import BlogContext from './contexts/blogContext';
+import { editPost, toggleEdit, addPost } from './actions';
 import './PostForm.css';
 
-const PostForm = ({ edit }) => {
+const PostForm = ({ post, postId }) => {
   const history = useHistory();
-
-  let post;
-  let postId;
-  let handleEditClick;
-  let addPost;
-  let editPost;
-
-  const editingContext = useContext(EditFormContext);
-  const postContext = useContext(BlogContext);
-
-  if (edit) {
-    post = editingContext.post;
-    postId = editingContext.postId;
-    handleEditClick = editingContext.handleEditClick;
-    editPost = postContext.editBlogPost;
-  } else {
-    addPost = postContext.addBlogPost;
-  }
+  const dispatch = useDispatch();
+  const edit = useSelector(store => store.editing);
 
   const INITIAL_STATE = {
     title: post ? post.title : "",
@@ -38,15 +22,19 @@ const PostForm = ({ edit }) => {
     setFormData(fData => ({ ...fData, [name]: value }));
   }
 
+  const editBlogPost = () => dispatch(editPost(postId, formData));
+  const editOff = () => dispatch(toggleEdit());
+  const createPost = () => dispatch(addPost(formData));
+
   const handleSubmit = evt => {
     evt.preventDefault();
 
     if (edit) {
-      editPost(formData, postId);
-      handleEditClick()
+      editBlogPost();
+      editOff();
       history.push(`/${postId}`);
     } else {
-      addPost(formData);
+      createPost();
       history.push("/");
     }
   }
@@ -92,7 +80,7 @@ const PostForm = ({ edit }) => {
           ></textarea>
         </div>
         <button className="btn btn-primary mr-3">{edit ? "Edit" : "Add"}</button>
-        {edit ? <button onClick={handleEditClick} className="btn btn-secondary">Cancel</button> : 
+        {edit ? <button onClick={editOff} className="btn btn-secondary">Cancel</button> : 
         <Link to="/" className="btn btn-secondary">Cancel</Link>}
       </form>
     </div>

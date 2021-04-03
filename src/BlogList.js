@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
-import BlogContext from './contexts/blogContext';
+import React from 'react';
 import BlogCard from './BlogCard';
+import { useSelector } from 'react-redux';
 
 const BlogList = () => {
-  const { blogPosts: posts } = useContext(BlogContext);
+  const posts = useSelector(store => store.blogPosts);
 
   return (
     <div className="container">

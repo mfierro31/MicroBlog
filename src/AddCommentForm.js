@@ -1,8 +1,9 @@
-import React, { useState, useContext } from 'react';
-import BlogContext from './contexts/blogContext';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { addComment } from './actions';
 
 const AddCommentForm = ({ postId }) => {
-  const { addComment } = useContext(BlogContext);
+  const dispatch = useDispatch();
 
   const [text, setText] = useState("");
 
@@ -11,9 +12,11 @@ const AddCommentForm = ({ postId }) => {
     setText(value);
   }
 
+  const createComment = () => dispatch(addComment(postId, text));
+
   const handleSubmit = evt => {
     evt.preventDefault();
-    addComment(postId, text);
+    createComment();
     setText("");
   }
 
