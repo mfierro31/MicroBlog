@@ -16,6 +16,13 @@ function gotPost(post) {
   };
 }
 
+function deletedPost(postId) {
+  return {
+    type: "DELETE_POST",
+    postId
+  };
+}
+
 export function fetchPosts() {
   return async function(dispatch) {
     const { data } = await axios.get(POSTS_URL);
@@ -27,5 +34,12 @@ export function fetchPost(postId) {
   return async function(dispatch) {
     const { data } = await axios.get(`${POSTS_URL}/${postId}`);
     dispatch(gotPost(data));
+  }
+}
+
+export function deletePost(postId) {
+  return async function(dispatch) {
+    await axios.delete(`${POSTS_URL}/${postId}`);
+    dispatch(deletedPost(postId));
   }
 }
