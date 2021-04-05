@@ -22,8 +22,7 @@ const BlogPost = () => {
 
   const handleEditClick = () => dispatch(toggleEdit());
   const deleteBlogPost = () => {
-    dispatch(deletePost(postId));
-    history.push("/");
+    // don't know what to put here
   }
 
   if (editing) {
