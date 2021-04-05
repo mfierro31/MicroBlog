@@ -1,16 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import BlogCard from './BlogCard';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchPosts } from './actionCreators';
 
 const BlogList = () => {
-  const posts = useSelector(store => store.blogPosts);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchPosts());
+  }, [dispatch]);
+
+  const posts = useSelector(store => store.blogPostsMin);
+
+  if (posts.length === 0) {
+    return <h1>Loading...</h1>;
+  }
 
   return (
     <div className="container">
       <div className="row justify-content-between">
-        {Object.keys(posts).map(key => (
-          <div key={key} className="col-6 mb-5">
-            <BlogCard key={key} id={key} title={posts[key].title} description={posts[key].description}/>
+        {posts.map(p => (
+          <div key={p.id} className="col-6 mb-5">
+            <BlogCard key={p.id} id={p.id} title={p.title} description={p.description}/>
           </div>
         ))}
       </div>
