@@ -14,7 +14,6 @@ const BlogPost = () => {
   const dispatch = useDispatch();
   const [editing, setEditing] = useState(false);
   const post = useSelector(store => store.blogPostsFull[postId]);
-  console.log(post);
 
   useEffect(() => {
     // only runs if the post we're trying to view isn't in the blogPostsFull state yet
@@ -46,8 +45,6 @@ const BlogPost = () => {
     return <PostForm post={post} toggleEdit={handleEditClick} postId={postId} edit={editing} />;
   }
   
-  console.log(post);
-
   return (
     <div>
       <h1 className="mb-3">{post.title}</h1>
