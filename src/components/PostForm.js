@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
-import { editPost, toggleEdit, addPost } from './actions';
+import { editPost, addPost } from '../actions/actionCreators';
 import './PostForm.css';
 
-const PostForm = ({ post, postId }) => {
+const PostForm = ({ post, edit, toggleEdit, postId }) => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const edit = useSelector(store => store.editing);
 
   const INITIAL_STATE = {
     title: post ? post.title : "",
@@ -23,7 +22,6 @@ const PostForm = ({ post, postId }) => {
   }
 
   const editBlogPost = () => dispatch(editPost(postId, formData));
-  const editOff = () => dispatch(toggleEdit());
   const createPost = () => dispatch(addPost(formData));
 
   const handleSubmit = evt => {
@@ -31,7 +29,7 @@ const PostForm = ({ post, postId }) => {
 
     if (edit) {
       editBlogPost();
-      editOff();
+      toggleEdit();
       history.push(`/${postId}`);
     } else {
       createPost();
@@ -80,7 +78,7 @@ const PostForm = ({ post, postId }) => {
           ></textarea>
         </div>
         <button className="btn btn-primary mr-3">{edit ? "Edit" : "Add"}</button>
-        {edit ? <button onClick={editOff} className="btn btn-secondary">Cancel</button> : 
+        {edit ? <button onClick={toggleEdit} className="btn btn-secondary">Cancel</button> : 
         <Link to="/" className="btn btn-secondary">Cancel</Link>}
       </form>
     </div>
